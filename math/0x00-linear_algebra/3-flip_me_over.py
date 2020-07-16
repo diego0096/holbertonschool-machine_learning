@@ -4,5 +4,4 @@
 
 def matrix_transpose(matrix):
     """transpose matrix"""
-
-    return [[row[zero] for row in matrix] for zero in range(len(matrix[0]))]
+    return [[row[idx] for row in matrix] for idx in range(len(matrix[0]))]
