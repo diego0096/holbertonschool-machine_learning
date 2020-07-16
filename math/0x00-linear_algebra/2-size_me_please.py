@@ -5,7 +5,7 @@ Module used to find the size of a matrix
 
 
 def matrix_shape(matrix):
-"""Return shape of given list-matrix"""
+    """Return shape of given list-matrix"""
     shape = []
     try:
         while(len(matrix) > 0):
