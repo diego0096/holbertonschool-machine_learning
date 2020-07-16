@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
+"""add two arrays elemnt 2D"""
 
 
 def add_matrices2D(mat1, mat2):
-
+    """two elements 2D"""
     if len(mat1) != len(mat2):
         return None
     if len(mat1[0]) != len(mat2[0]):

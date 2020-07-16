@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
+"""multiplicate arrays"""
 
 
 def mat_mul(mat1, mat2):
-
+    """multiplicate arrays"""
     if len(mat1[0]) != len(mat2):
         return None
     mat2_trans = [[row[idx] for row in mat2] for idx in range(len(mat2[0]))]
