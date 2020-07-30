@@ -26,6 +26,7 @@ class Poisson:
                 pow(2.7182818285, -1 * self.lambtha) /
                 factorial(k))
 
+
 def factorial(n):
     """return factorial"""
     if n < 0:
