@@ -30,7 +30,7 @@ class Normal:
         return z * self.stddev + self.mean
 
     def pdf(self, x):
-        """calculate pdf at given x value"""
+        """Calculate pdf"""
         return (pow(2.7182818285, ((x - self.mean) ** 2 /
-                    (-2 * self.stddev ** 2))) /
-                        (2 * 3.1415926536 * self.stddev ** 2) ** .5)
+                                   (-2 * self.stddev ** 2))) /
+                (2 * 3.1415926536 * self.stddev ** 2) ** .5)
