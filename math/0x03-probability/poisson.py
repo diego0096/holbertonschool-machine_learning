@@ -6,6 +6,7 @@ class Poisson:
     """Poisson distribution"""
     def __init__(self, data=None, lambtha=1.):
         """Initialize distributions"""
+        self.lambtha = float(lambtha)
         if data is None:
             if lambtha <= 0:
                 raise ValueError("lambrha must be a positive value")
