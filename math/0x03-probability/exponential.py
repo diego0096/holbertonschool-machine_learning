@@ -9,7 +9,7 @@ class Exponential:
         """initial exponential"""
         if data is None:
             if lambtha <= 0:
-                raise ValueError("lambtha must be a positive vale")
+                raise ValueError("lambtha must be a positive value")
             self.lambtha = float(lambtha)
         else:
             if type(data) is not list:
