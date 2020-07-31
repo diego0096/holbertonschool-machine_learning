@@ -33,6 +33,15 @@ class Binomial:
         return (factorial(self.n) / factorial(k) / factorial(self.n - k) *
                 self.p ** k * (1 - self.p) ** (self.n - k))
 
+    def cdf(self, k):
+        """return probability of 0 to k"""
+        if k > self.n or k < 0:
+            return 0
+        cdf_sum = 0
+        for x in range (0, int(k) + 1):
+            cdf_sum += self.pmf(x)
+        return cdf_sum
+
 
 def factorial(x):
     """return factorial"""
