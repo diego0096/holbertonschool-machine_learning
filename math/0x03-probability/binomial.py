@@ -30,8 +30,9 @@ class Binomial:
         k = int(k)
         if k > self.n or k < 0:
             return 0
-        return (factorial(self.n) / factorial(k) / factorial(self.n - k)
-                * self.p ** k * (1 - self.p) ** (self.n - k))
+        return (factorial(self.n) / factorial(k) / factorial(self.n - k) *
+                self.p ** k * (1 - self.p) ** (self.n - k))
+
 
 def factorial(x):
     """return factorial"""
