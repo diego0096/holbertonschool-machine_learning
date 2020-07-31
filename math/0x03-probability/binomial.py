@@ -32,3 +32,11 @@ class Binomial:
             return 0
         return (factorial(self.n) / factorial(k) / factorial(self.n - k)
                 * self.p ** k * (1 - self.p) ** (self.n - k))
+
+def factorial(x):
+    """return factorial"""
+    if x < 0:
+        return None
+    if x < 2:
+        return 1
+    return x * factorial(x - 1)
