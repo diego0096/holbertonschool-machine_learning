@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Normal distribution"""
+"""Binomial distribution"""
 
 
 class Binomial:
-    """Normal distribution"""
-    def __init__(self, data=None, mean=0., stddev=1.):
-        """Inicialize normal distribution"""
+    """Binomial distribution"""
+    def __init__(self, data=None, n=1, p=0.5):
+        """init binominal"""
         if data is None:
             if n <= 0:
                 raise ValueError("n must be a positive value")
@@ -19,7 +19,7 @@ class Binomial:
             if len(data) < 2:
                 raise ValueError("data must contain multiple values")
             mean = sum(data) / len(data)
-            variance = sum([x - mean) ** 2 for x in data]) / len(data)
+            variance = sum([(x - mean) ** 2 for x in data]) / len(data)
             self.p = -1 * (variance / mean -1)
             n = mean/self.p
             self.n = round(n)
