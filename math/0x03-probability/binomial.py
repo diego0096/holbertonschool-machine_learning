@@ -24,3 +24,11 @@ class Binomial:
             n = mean/self.p
             self.n = round(n)
             self.p *= n/self.n
+
+    def pmf(self, k):
+        """return probaility"""
+        k = int(k)
+        if k > self.n or k < 0:
+            return 0
+        return (factorial(self.n) / factorial(k) / factorial(self.n - k)
+                * self.p ** k * (1 - self.p) ** (self.n - k))
