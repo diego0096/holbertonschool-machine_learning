@@ -2,14 +2,12 @@
 """Simple neuron class"""
 	
 
+    import numpy as np
 	
 
-	import numpy as np
 	
 
-	
-
-	class Neuron:
+    class Neuron:
 	    """Simple neuron class"""
 	
 
