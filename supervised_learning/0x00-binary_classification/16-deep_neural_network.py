@@ -9,7 +9,10 @@ class DeepNeuralNetwork:
     """Simple deep neural network class"""
 
     def __init__(self, nx, layers):
-        """nx: number of input features"""
+        """
+        nx: number of input features
+        layers: list of number of nodes in each layer
+        """
         if type(nx) is not int:
             raise TypeError("nx must be an integer")
         if nx < 1:
