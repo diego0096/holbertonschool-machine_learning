@@ -7,6 +7,7 @@ import numpy as np
 
 class DeepNeuralNetwork:
     """ Class """
+
     def __init__(self, nx, layers):
         """Initialize NeuralNetwork"""
         if not isinstance(nx, int):
@@ -50,6 +51,30 @@ class DeepNeuralNetwork:
 
     def forward_prop(self, X):
         """Calculates the forward propagation of the neural network"""
+        self.__cache["A0"] = X
+        for layer in range(self.__L):
+            weights = self.__weights["W" + str(layer + 1)]
+            a_ = self.__cache["A" + str(layer)]
+            b = self.__weights["b" + str(layer + 1)]
+            z = np.matmul(weights, a_) + b
+            forward_prop = 1 / (1 + np.exp(-1 * z))
+            self.__cache["A" + str(layer + 1)] = forward_prop
+        return self.__cache["A" + str(self.__L)], self.__cache
+
+    def cost(self, Y, A):
+        """Calculates the cost of the model using logistic regression"""
+        m = Y.shape[1]
+        j = - (1 / m)
+        Â = 1.0000001 - A
+        Ŷ = 1 - Y
+        log_A = np.log(A)
+        log_Â = np.log(Â)
+        cost = j * np.sum(np.multiply(Y, log_A) + np.multiply(Ŷ, log_Â))
+        return cost
+
+    def evaluate(self, X, Y):
+        """Calculates the cost of the model using logistic regression"""
+
         self.forward_prop(X)
         cost = self.cost(Y, self.__cache["A" + str(self.L)])
         labels = np.where(self.__cache["A" + str(self.L)] < 0.5, 0, 1)
