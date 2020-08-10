@@ -59,6 +59,7 @@ class DeepNeuralNetwork:
             forward_prop = 1 / (1 + np.exp(-1 * z))
             self.__cache["A" + str(layer + 1)] = forward_prop
         return self.__cache["A" + str(self.__L)], self.__cache
+
     def cost(self, Y, A):
         """Calculates the cost of the model using logistic regression"""
         m = Y.shape[1]
