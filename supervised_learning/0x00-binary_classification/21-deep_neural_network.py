@@ -1,84 +1,98 @@
 #!/usr/bin/env python3
-"""Simple deep neural network class"""
+"""Class DeepNeuralNetwork"""
 
 
 import numpy as np
 
 
 class DeepNeuralNetwork:
-    """Simple deep neural network class"""
-    def __init__(self, nx, layers):
-        """nx: number of input features"""
-        if type(nx) is not int:
-            raise TypeError("nx must be an integer")
-        if nx < 1:
-            raise ValueError("nx must be a positive integer")
-        if type(layers) is not list:
-            raise TypeError("layers must be a list of positive integers")
-        for layer in layers:
-            if type(layer) is not int or layer < 1:
-                raise TypeError("layers must be a list of positive integers")
+    """ Class """
 
+    def __init__(self, nx, layers):
+        """Initialize NeuralNetwork"""
+        if not isinstance(nx, int):
+            raise TypeError('nx must be an integer')
+        if nx < 1:
+            raise ValueError('nx must be a positive integer')
+        if not isinstance(layers, list):
+            raise TypeError('layers must be a list of positive integers')
+        if len(layers) == 0:
+            raise TypeError('layers must be a list of positive integers')
         self.__L = len(layers)
         self.__cache = {}
-        self.__weights = {"W1": np.random.randn(layers[0], nx) *
-                          np.sqrt(2 / nx),
-                          "b1": np.zeros((layers[0], 1))}
-        for layer, size in enumerate(layers[1:], 2):
-            cur = "W" + str(layer)
-            self.__weights[cur] = (np.random.randn(size, layers[layer - 2]) *
-                                   np.sqrt(2 / layers[layer - 2]))
-            cur = "b" + str(layer)
-            self.__weights[cur] = np.zeros((layers[layer - 1], 1))
+        self.__weights = {}
+        for lay in range(len(layers)):
+            if not isinstance(layers[lay], int) or layers[lay] <= 0:
+                raise TypeError('layers must be a list of positive integers')
+            self.weights["b" + str(lay + 1)] = np.zeros((layers[lay], 1))
+            if lay == 0:
+                sq = np.sqrt(2 / nx)
+                he_et_al = np.random.randn(layers[lay], nx) * sq
+                self.weights["W" + str(lay + 1)] = he_et_al
+            else:
+                sq = np.sqrt(2 / layers[lay - 1])
+                he_et_al = np.random.randn(layers[lay], layers[lay - 1]) * sq
+                self.weights["W" + str(lay + 1)] = he_et_al
 
     @property
     def L(self):
+        """getter method"""
         return self.__L
 
     @property
     def cache(self):
+        """getter method"""
         return self.__cache
 
     @property
     def weights(self):
+        """getter method"""
         return self.__weights
 
     def forward_prop(self, X):
-        """Forward pragate the neural network"""
+        """Calculates the forward propagation of the neural network"""
         self.__cache["A0"] = X
         for layer in range(self.__L):
-            curw = "W" + str(layer + 1)
-            curb = "b" + str(layer + 1)
-            cura = "A" + str(layer + 1)
-            preva = "A" + str(layer)
-            z = (np.dot(self.__weights[curw], self.__cache[preva]) +
-                 self.__weights[curb])
-            self.__cache[cura] = 1 / (1 + np.exp(-z))
+            weights = self.__weights["W" + str(layer + 1)]
+            a_ = self.__cache["A" + str(layer)]
+            b = self.__weights["b" + str(layer + 1)]
+            z = np.matmul(weights, a_) + b
+            forward_prop = 1 / (1 + np.exp(-1 * z))
+            self.__cache["A" + str(layer + 1)] = forward_prop
         return self.__cache["A" + str(self.__L)], self.__cache
 
     def cost(self, Y, A):
-        """Calculate cost of neural network"""
-        return -(Y * np.log(A) + (1 - Y) * np.log(1.0000001 - A)).mean()
+        """Calculates the cost of the model using logistic regression"""
+        m = Y.shape[1]
+        j = - (1 / m)
+        Â = 1.0000001 - A
+        Ŷ = 1 - Y
+        log_A = np.log(A)
+        log_Â = np.log(Â)
+        cost = j * np.sum(np.multiply(Y, log_A) + np.multiply(Ŷ, log_Â))
+        return cost
 
     def evaluate(self, X, Y):
-        """Evaluate the neural network"""
-        A = self.forward_prop(X)[0]
-        return A.round().astype(int), self.cost(Y, A)
+        """Calculates the cost of the model using logistic regression"""
+        self.forward_prop(X)
+        cost = self.cost(Y, self.__cache["A" + str(self.L)])
+        labels = np.where(self.__cache["A" + str(self.L)] < 0.5, 0, 1)
+        return (labels, cost)
 
     def gradient_descent(self, Y, cache, alpha=0.05):
-        """Perform a step of gradient descent on the network"""
-        dz = {self.__L: cache["A" + str(self.__L)] - Y}
-        Wstr = "W" + str(self.__L)
-        for layer in range(self.__L - 1, 0, -1):
-            curact = cache["A" + str(layer)]
-            dz[layer] = (np.dot(self.__weights[Wstr].T, dz[layer + 1]) *
-                         curact * (1 - curact))
-            Wstr = "W" + str(layer)
-        for layer in range(self.__L, 0, -1):
-            Wstr = "W" + str(layer)
-            bstr = "b" + str(layer)
-            prevact = self.cache["A" + str(layer - 1)]
-            self.__weights[Wstr] -= (np.matmul(dz[layer], prevact.T)
-                                     * alpha / prevact.shape[1])
-            self.__weights[bstr] -= (dz[layer].mean(axis=1, keepdims=True)
-                                     * alpha)
+        """Calculates one pass of gradient descent on the neural network"""
+        m = Y.shape[1]
+        cp_w = self.__weights.copy()
+        la = self.__L
+        dz = self.__cache['A' + str(la)] - Y
+        dw = np.dot(self.__cache['A' + str(la - 1)], dz.T) / m
+        db = np.sum(dz, axis=1, keepdims=True) / m
+        self.__weights['W' + str(la)] = cp_w['W' + str(la)] - alpha * dw.T
+        self.__weights['b' + str(la)] = cp_w['b' + str(la)] - alpha * db
+        for la in range(self.__L - 1, 0, -1):
+            g = self.__cache['A' + str(la)] * (1 - self.__cache['A' + str(la)])
+            dz = np.dot(cp_w['W' + str(la + 1)].T, dz) * g
+            dw = np.dot(self.__cache['A' + str(la - 1)], dz.T) / m
+            db = np.sum(dz, axis=1, keepdims=True) / m
+            self.__weights['W' + str(la)] = cp_w['W' + str(la)] - alpha * dw.T
+            self.__weights['b' + str(la)] = cp_w['b' + str(la)] - alpha * db
