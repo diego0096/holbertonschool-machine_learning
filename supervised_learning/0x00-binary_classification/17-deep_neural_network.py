@@ -7,8 +7,6 @@ import numpy as np
 
 class DeepNeuralNetwork:
     """ Class """
-
-
     def __init__(self, nx, layers):
         """Initialize NeuralNetwork"""
         if not isinstance(nx, int):
