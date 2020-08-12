@@ -100,7 +100,7 @@ class DeepNeuralNetwork:
 
     def train(self, X, Y, iterations=5000, alpha=0.05, verbose=True,
               graph=True, step=100):
-        """Trains the deep neural network and Updates the private 
+        """Trains the deep neural network and Updates the private
         attributes __weights and __cache"""
         if type(iterations) is not int:
             raise TypeError("iterations must be an integer")
