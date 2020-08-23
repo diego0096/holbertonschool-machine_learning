@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Module used to"""
 
+
 import numpy as np
 
 
