@@ -8,9 +8,9 @@ import tensorflow as tf
 def create_RMSProp_op(loss, alpha, beta2, epsilon):
     """Updates a variable using the RMSProp optimization algorithm"""
 
-    α = alpha
-    β2 = beta2
-    ε = epsilon
-    train = tf.train.RMSPropOptimizer(learning_rate=α, decay=β2, epsilon=ε)
+    a = alpha
+    b2 = beta2
+    e = epsilon
+    train = tf.train.RMSPropOptimizer(learning_rate=a, decay=b2, epsilon=e)
     op = train.minimize(loss)
     return op
