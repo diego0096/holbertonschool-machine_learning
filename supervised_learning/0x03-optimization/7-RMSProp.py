@@ -4,12 +4,12 @@
 
 def update_variables_RMSProp(alpha, beta2, epsilon, var, grad, s):
     """Updates a variable using the RMSProp optimization algorithm"""
-    α = alpha
-    β2 = beta2
-    ε = epsilon
-    α = alpha
+    a = alpha
+    b2 = beta2
+    e = epsilon
+    a = alpha
     dw = grad
     w = var
-    s_new = β2 * s + (1 - β2) * (dw * dw)
-    W = w - α * (dw / ((s_new ** 0.5) + ε))
+    s_new = b2 * s + (1 - b2) * (dw * dw)
+    W = w - a * (dw / ((s_new ** 0.5) + e))
     return W, s_new
