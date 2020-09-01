@@ -8,6 +8,7 @@ import tensorflow.keras as K
 def build_model(nx, layers, activations, lambtha, keep_prob):
     """Builds a NN with the Keras library"""
     l = lambtha
+
     a_model = K.Sequential()
     n_layers = len(layers)
     regularizer = K.regularizers.l2(l)
