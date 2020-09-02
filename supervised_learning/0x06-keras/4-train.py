@@ -1,12 +1,23 @@
 #!/usr/bin/env python3
-"""Train a keras model"""
+"""Module used to"""
 
 
 import tensorflow.keras as K
 
 
-def train_model(network, data, labels, batch_size, epochs,
-                verbose=True, shuffle=False):
-    """Train a keras model"""
-    return network.fit(data, labels, batch_size=batch_size, epochs=epochs,
-                       shuffle=shuffle, verbose=verbose)
+def train_model(
+        network,
+        data,
+        labels,
+        batch_size,
+        epochs,
+        verbose=True,
+        shuffle=False):
+    """Function that trains a model"""
+    history = network.fit(data,
+                          labels,
+                          epochs=epochs,
+                          batch_size=batch_size,
+                          shuffle=shuffle,
+                          verbose=verbose)
+    return(history)
