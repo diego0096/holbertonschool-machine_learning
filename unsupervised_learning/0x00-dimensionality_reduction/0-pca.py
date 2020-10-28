@@ -1,53 +1,50 @@
 #!/usr/bin/env python3
 """
-0-pca.py
+PCA: principal components analysis
 """
+
 import numpy as np
 
 
 def pca(X, var=0.95):
-    """function that performs principal components analysis on a dataset"""
+    """
+    Function that performs PCA on a dataset:
+    Args:
+    - X         numpy.ndarray   Array of shape (n, d) where:
+                - n     (int)       number of data points
+                - d     (int)       number of dims in each point
+                Note: All dims have a mean of 0 across all data points
+    - var       (float)         Fraction of the variance that the PCA
+                                transformation should maintain
+    Returns:    (The weights matrix that maintains var fraction of X‘s
+                original variance)
+    W:          numpy.ndarray of shape (d, nd)
+                - nd                new dimensionality of the transformed X
+    """
 
-    # Useful resource: https://www.youtube.com/watch?v=NUn6WeFM5cM
+    # symbols: ⊤, ⅀, σ²³
 
-    # PCA defined as the eigendecomposition of the covariance matrix dot(X.T,X)
-    # -> returns a set of eigenvectors (W:loadings) and eigenvalues (lambda)
-    # Each column of W is a principal component; columns ordered by how large
-    # their corresponding eigenvalues are; i.e. principal component
-    # corresponding to the largest eigenvalue is always going to be the first
-    # one, Etc.; r: number of principal components to extract -> truncate W
-    # -> extract the first r columns of W
-    # T:scores, defined as T = dot(X,W) -> Tr = dot(X,Wr)
-    # -> Tr new representation of X (in the W space)
+    # 1. calculate the single value decomposition
+    #    - s(…, K) array
+    # Vector(s) with the singular values, within each vector sorted in
+    # descending order. The first a.ndim - 2 dimensions have the same size as
+    # those of the input a.
+    #    - vh { (…, N, N), (…, K, N) } array
+    # Unitary array(s). The first a.ndim - 2 dimensions have the same size as
+    # those of the input a. The size of the last two dimensions depends on the
+    # value of full_matrices. Only returned when compute_uv is True.
 
-    # Better way of computing W: Singular Value Decomposition (SVD)
-    # X = dot(U,S,V.T); U: right singular vector, V:left singular vector
-    # S: singular values on the diagonal (proportional to eigenvalues; ordered)
-    # Importantly (it can be demonstrated that): V = W
-    # T = dot(X,W) && X = dot(U,S,V.T) -> dot(X,V) = dot(U,S,V.T,V)
-    # since dot(U.T,U) = I and dot(V.T,V) = I -> dot(X,V) = dot(U,S)
-    # since V = W -> dot(X,W) = dot(U,S) -> T = dot(U,S) -> Tr = dot(Ur,Sr)
+    s = np.linalg.svd(X)[1]
+    vh = np.linalg.svd(X)[2]
 
-    # Compute the SVD:
-    U, S, Vt = np.linalg.svd(X)
-    # print(S)
+    num = np.cumsum(s)
+    denom = np.sum(s)
+    accum_var = num / denom
 
-    # Compute the commulated sum of the singular (s) values from S:
-    sum_s = np.cumsum(S)
-    # print(sum_s)
-    # sum_s is a 1D array of this type: array([ 1,  3,  6, 10, 15, 21])
+    # filter according specs of var
+    num_truncated_results = np.argwhere(accum_var >= var)
+    num_truncated_results = num_truncated_results[0, 0] + 1
+    weights = vh[: num_truncated_results].T
+    # print("weights ", weights)
 
-    # Infer 'r' (number of principal components to extract from W/V)
-    # based on the 'var' treshold passed as argument to the method
-    # Normalize sum_s:
-    sum_s = sum_s / sum_s[-1]
-    # print(sum_s)
-    # Note: here np.where() returns an array of indices
-    r = np.min(np.where(sum_s >= var))
-    # print(r)
-
-    # Compute Vr(= Wr):
-    V = Vt.T
-    Vr = V[..., :r + 1]
-
-    return Vr
+    return weights
