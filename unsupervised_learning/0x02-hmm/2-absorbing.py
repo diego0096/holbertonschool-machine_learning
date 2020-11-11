@@ -48,6 +48,7 @@ def regular(P):
             return s
         s_prev = s
 
+
 def absorbing(P):
     """function that determines if a markov chain is absorbing"""
     if not isinstance(P, np.ndarray) or P.ndim != 2:
