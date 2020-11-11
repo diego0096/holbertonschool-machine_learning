@@ -6,7 +6,7 @@ import numpy as np
 
 
 def forward(Observation, Emission, Transition, Initial):
-    """function that performs the forward algorithm for a hidden markov model"""
+    """function that performs the forward algorithm"""
     if not isinstance(Initial, np.ndarray) or Initial.ndim != 2:
         return None, None
     if Initial.shape[1] != 1:
