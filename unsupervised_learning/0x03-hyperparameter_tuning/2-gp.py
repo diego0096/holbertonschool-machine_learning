@@ -37,13 +37,8 @@ class GaussianProcess:
         sigma = np.diag(cov_s)
         return mu_s, sigma
 
-def update(self, X_new, Y_new):
-        """
-        Class method.
-        Updates a Gaussian Process
-        """
-        self.X = np.append(self.X, X_new)
-        self.X = np.reshape(self.X, (-1, 1))
-        self.Y = np.append(self.Y, Y_new)
-        self.Y = np.reshape(self.Y, (-1, 1))
-        self.K = self.kernel(self.X.reshape(-1, 1), self.X.reshape(-1, 1))
+    def update(self, X_new, Y_new):
+        """function that updates a Gaussian process"""
+        self.X = np.concatenate((self.X, X_new[..., np.newaxis]), axis=0)
+        self.Y = np.concatenate((self.Y, Y_new[..., np.newaxis]), axis=0)
+        self.K = self.kernel(self.X, self.X)
