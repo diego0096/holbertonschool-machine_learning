@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
-""" doc """
+"""3-variational.py"""
+
+
 import tensorflow.keras as keras
 
 
 def sampling(inputs):
-    """ doc """
+    """sample z"""
     z_mean, z_log_var = inputs
     batch = keras.backend.shape(z_mean)[0]
     dim = keras.backend.int_shape(z_mean)[1]
@@ -13,7 +15,7 @@ def sampling(inputs):
 
 
 def autoencoder(input_dims, hidden_layers, latent_dims):
-    """ doc """
+    """function that instantiates a VAE instance"""
     encoder_inp = keras.Input(shape=(input_dims,))
     x = keras.layers.Dense(hidden_layers[0], activation='relu')(encoder_inp)
     for i in range(1, len(hidden_layers)):
@@ -36,7 +38,7 @@ def autoencoder(input_dims, hidden_layers, latent_dims):
     vae = keras.models.Model(encoder_inp, outputs)
 
     def loss(y, y_pred):
-        """ doc """
+        """cost function"""
         recons_loss = keras.backend.binary_crossentropy(y, y_pred)
         recons_loss = keras.backend.sum(recons_loss, axis=1)
         kl_loss = (1 + z_log_var - keras.backend.square(z_mean) -
