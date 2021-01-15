@@ -20,6 +20,7 @@ class Dataset:
             self.data_train)
         self.data_train = self.data_train.map(self.tf_encode)
         self.data_valid = self.data_valid.map(self.tf_encode)
+    
         def filter_max_length(x, y, max_len=max_len):
             """helper function to .filter() method"""
             return tf.logical_and(tf.size(x) <= max_len,
